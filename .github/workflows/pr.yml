@@ -7,11 +7,13 @@ on:
 
 jobs:
   set-state:
-      runs-on: ubuntu-latest
-      outputs:
-        pr_approved: ${{ github.event.review.state == 'approved' }}
-        deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
-        deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
+    runs-on: ubuntu-latest
+    outputs:
+      pr_approved: ${{ github.event.review.state == 'approved' }}
+      deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
+      deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
+    steps:
+      - run: echo "Set state"
 
   echo-state:
     needs: [set-state] # sequential

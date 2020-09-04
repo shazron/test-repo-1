@@ -19,11 +19,11 @@ jobs:
     needs: [set-state]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "PR Review State - " ${{ github.event.review.state }}
-      - run: echo "PR Labels - " ${{ join(github.event.pull_request.labels.*.name, ',') }}
-      - run: echo "PR Approved - " ${{ needs.set-state.outputs.pr_approved }}
-      - run: echo "Deploy - " ${{ needs.set-state.outputs.deploy_prod }}
-      - run: echo "Deploy Dev - " ${{ needs.set-state.outputs.deploy_dev }}
+      - run: echo "PR Review State - ${{ github.event.review.state }}"
+      - run: echo "PR Labels - ${{ join(github.event.pull_request.labels.*.name, ',') }}"
+      - run: echo "PR Approved - ${{ needs.set-state.outputs.pr_approved }}"
+      - run: echo "Deploy - ${{ needs.set-state.outputs.deploy_prod }}"
+      - run: echo "Deploy Dev - ${{ needs.set-state.outputs.deploy_dev }}"
 
   build-dev:
     needs: [set-state]
@@ -31,8 +31,7 @@ jobs:
     if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_dev == 'true'
     steps:
       - uses: actions/checkout@v2
-      - name: build (dev)
-        run: echo "approved (dev)"
+      - run: echo "approved (dev)"
 
   build-production:
     needs: [set-state]
@@ -40,6 +39,5 @@ jobs:
     if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
     steps:
       - uses: actions/checkout@v2
-      - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
-      - run: echo "Deploy " ${{ needs.set-state.outputs.deploy_prod }}
+      - run: echo "approved (prod)"
 

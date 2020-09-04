@@ -20,7 +20,7 @@ jobs:
   build-production:
     needs: [set-state]
     runs-on: ubuntu-latest
-    if: needs.set-state.outputs.pr_approved && needs.set-state.outputs.deploy_prod
+    if: needs.set-state.outputs.pr_approved == true && needs.set-state.outputs.deploy_prod == true
     steps:
       - uses: actions/checkout@v2
       - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
@@ -29,7 +29,7 @@ jobs:
   build-dev:
     needs: [set-state]
     runs-on: ubuntu-latest
-    if: needs.set-state.outputs.pr_approved && needs.set-state.outputs.deploy_dev
+    if: needs.set-state.outputs.pr_approved == true && needs.set-state.outputs.deploy_dev == true
     steps:
       - uses: actions/checkout@v2
       - name: build (dev)

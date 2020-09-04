@@ -17,6 +17,17 @@ jobs:
           run: |
             echo "PR Review State: " ${{ github.event.review.state }}
             echo "PR Labels: " ${{ join(github.event.pull_request.labels.*.name, ',') }}
+
+  echo-state:
+    needs: [set-state] # sequential
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "PR Review State - " ${{ github.event.review.state }}
+      - run: echo "PR Labels - " ${{ join(github.event.pull_request.labels.*.name, ',') }}
+      - run: echo "PR Approved - " ${{ needs.set-state.outputs.pr_approved }}
+      - run: echo "Deploy - " ${{ needs.set-state.outputs.deploy_prod }}
+      - run: echo "Deploy Dev - " ${{ needs.set-state.outputs.deploy_dev }}
+
   build-production:
     needs: [set-state]
     runs-on: ubuntu-latest

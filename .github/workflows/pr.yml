@@ -35,8 +35,8 @@ jobs:
   build-prod:
     needs: [build-dev] # in case we are building for both, make it sequential
     runs-on: ubuntu-latest
+    if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
     steps:
-      - if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
       - uses: actions/checkout@v2
       - run: echo "approved (prod)"
 

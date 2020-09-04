@@ -28,15 +28,6 @@ jobs:
       - run: echo "Deploy - " ${{ needs.set-state.outputs.deploy_prod }}
       - run: echo "Deploy Dev - " ${{ needs.set-state.outputs.deploy_dev }}
 
-  build-production:
-    needs: [set-state]
-    runs-on: ubuntu-latest
-    if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
-      - run: echo "Deploy " ${{ needs.set-state.outputs.deploy_prod }}
-
   build-dev:
     needs: [set-state]
     runs-on: ubuntu-latest
@@ -45,3 +36,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: build (dev)
         run: echo "approved (dev)"
+
+  build-production:
+    needs: [set-state, build-dev]
+    runs-on: ubuntu-latest
+    if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
+      - run: echo "Deploy " ${{ needs.set-state.outputs.deploy_prod }}
+

@@ -14,6 +14,7 @@ jobs:
             echo "PR Review State: " ${{ github.event.review.state }}
             echo "PR Labels: " ${{ join(github.event.pull_request.labels.*.name, ',') }}
   build-production:
+    needs: [echo-state]
     runs-on: ubuntu-latest
     if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy')
     steps:
@@ -22,6 +23,7 @@ jobs:
         run: |
           echo "approved (prod)"
   build-dev:
+    needs: [echo-state]
     runs-on: ubuntu-latest
     if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy:dev')
     steps:

@@ -20,4 +20,4 @@ jobs:
         - name: State Check
           run: |
             echo ${{ github.event.review.state }}
-            echo ${{ join(github.event.pull_request.labels, ',') }}
+            echo ${{ join(github.event.pull_request.labels.*.name, ',') }}

@@ -7,38 +7,30 @@ on:
 
 jobs:
   set-state:
-    runs-on: ubuntu-latest
-    outputs:
-      pr_approved: ${{ github.event.review.state == 'approved' }}
-      deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
-      deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
-    steps:
-      - run: echo "Set state"
-
-  echo-state:
-    needs: [set-state] # sequential
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo state
-      - run: echo "PR Review State - " ${{ github.event.review.state }}
-      - run: echo "PR Labels - " ${{ join(github.event.pull_request.labels.*.name, ',') }}
-      - run: echo "PR Approved - " ${{ needs.set-state.outputs.pr_approved }}
-      - run: echo "Deploy - " ${{ needs.set-state.outputs.deploy_prod }}
-      - run: echo "Deploy Dev - " ${{ needs.set-state.outputs.deploy_dev }}
-
-  build-dev:
-    needs: [set-state] # sequential
-    runs-on: ubuntu-latest
-    if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_dev == 'true'
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo "approved (dev)"
-
-  build-prod:
-    needs: [set-state, build-dev] # in case we are building for both, make it sequential
+      runs-on: ubuntu-latest
+      outputs:
+        pr_approved: ${{ github.event.review.state == 'approved' }}
+        deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
+        deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
+      steps:
+        - name: echo state
+          run: |
+            echo "PR Review State: " ${{ github.event.review.state }}
+            echo "PR Labels: " ${{ join(github.event.pull_request.labels.*.name, ',') }}
+  build-production:
+    needs: [set-state]
     runs-on: ubuntu-latest
     if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
     steps:
       - uses: actions/checkout@v2
-      - run: echo "approved (prod)"
+      - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
+      - run: echo "Deploy " ${{ needs.set-state.outputs.deploy_prod }}
 
+  build-dev:
+    needs: [set-state]
+    runs-on: ubuntu-latest
+    if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_dev == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - name: build (dev)
+        run: echo "approved (dev)"

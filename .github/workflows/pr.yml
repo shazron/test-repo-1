@@ -6,10 +6,10 @@ on:
     branches: ['master']
 
 jobs:
-  echo:
+  echo-state:
       runs-on: ubuntu-latest
       steps:
-        - name: State Check
+        - name: echo state
           run: |
             echo "PR Review State: " ${{ github.event.review.state }}
             echo "PR Labels: " ${{ join(github.event.pull_request.labels.*.name, ',') }}
@@ -18,7 +18,7 @@ jobs:
     if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy')
     steps:
       - uses: actions/checkout@v2
-      - name: job name
+      - name: build (prod)
         run: |
           echo "approved (prod)"
   build-dev:
@@ -26,6 +26,6 @@ jobs:
     if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy:dev')
     steps:
       - uses: actions/checkout@v2
-      - name: job name
+      - name: build (dev)
         run: |
           echo "approved (dev)"

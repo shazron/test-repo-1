@@ -7,10 +7,10 @@ on:
 
 jobs:
   build:
+    if: github.event.review.state == 'approved' && github.event.pull_request.labels.includes('deploy')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: job name
-        if: github.event.review.state == 'approved'
         run: |
           echo "approved"

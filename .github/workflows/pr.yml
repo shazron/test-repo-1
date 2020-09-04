@@ -6,28 +6,30 @@ on:
     branches: ['master']
 
 jobs:
-  echo-state:
+  set-state:
       runs-on: ubuntu-latest
+      outputs:
+        pr_approved: ${{ github.event.review.state == 'approved' }}
+        deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
+        deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
       steps:
         - name: echo state
           run: |
             echo "PR Review State: " ${{ github.event.review.state }}
             echo "PR Labels: " ${{ join(github.event.pull_request.labels.*.name, ',') }}
   build-production:
-    needs: [echo-state]
+    needs: [set-state]
     runs-on: ubuntu-latest
-    if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy')
+    if: needs.set-state.outputs.pr_approved && needs.set-state.outputs.deploy_prod
     steps:
       - uses: actions/checkout@v2
       - name: build (prod)
-        run: |
-          echo "approved (prod)"
+        run: echo "approved (prod)"
   build-dev:
-    needs: [echo-state]
+    needs: [set-state]
     runs-on: ubuntu-latest
-    if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy:dev')
+    if: needs.set-state.outputs.pr_approved && needs.set-state.outputs.deploy_dev
     steps:
       - uses: actions/checkout@v2
       - name: build (dev)
-        run: |
-          echo "approved (dev)"
+        run: echo "approved (dev)"

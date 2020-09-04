@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels, 'deploy')
+    if: github.event.review.state == 'approved' && contains(github.event.pull_request.labels.*.name, 'deploy')
     steps:
       - uses: actions/checkout@v2
       - name: job name

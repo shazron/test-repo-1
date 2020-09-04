@@ -1,4 +1,4 @@
-name: Respond to Pull Request
+name: Pull Request (approved, label as 'deploy' or 'deploy:dev')
 
 on:
   pull_request_review:

@@ -27,7 +27,7 @@ jobs:
       - run: echo "Deploy Dev - " ${{ needs.set-state.outputs.deploy_dev }}
 
   build-dev:
-    needs: [echo-state] # sequential
+    needs: [set-state] # sequential
     runs-on: ubuntu-latest
     if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_dev == 'true'
     steps:
@@ -35,7 +35,7 @@ jobs:
       - run: echo "approved (dev)"
 
   build-prod:
-    needs: [build-dev] # in case we are building for both, make it sequential
+    needs: [set-state, build-dev] # in case we are building for both, make it sequential
     runs-on: ubuntu-latest
     if: needs.set-state.outputs.pr_approved == 'true' && needs.set-state.outputs.deploy_prod == 'true'
     steps:

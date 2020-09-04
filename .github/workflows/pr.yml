@@ -23,8 +23,9 @@ jobs:
     if: needs.set-state.outputs.pr_approved && needs.set-state.outputs.deploy_prod
     steps:
       - uses: actions/checkout@v2
-      - name: build (prod)
-        run: echo "approved (prod)"
+      - run: echo "PR Approved " ${{ needs.set-state.outputs.pr_approved }}
+      - run: echo "Deploy " ${{ needs.set-state.outputs.deploy_prod }}
+
   build-dev:
     needs: [set-state]
     runs-on: ubuntu-latest

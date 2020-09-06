@@ -1,4 +1,4 @@
-name: Pull Request (approved, label as 'deploy' or 'deploy:dev')
+name: pr-approved
 
 on:
   pull_request_review:

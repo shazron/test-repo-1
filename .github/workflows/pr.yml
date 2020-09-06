@@ -40,4 +40,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "approved (prod)"
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@master
+        with:
+          message: 'approved (prod)'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

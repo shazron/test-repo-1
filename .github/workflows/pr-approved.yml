@@ -40,3 +40,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "approved (prod)"
+  post-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Comment PR'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # this may fail when a PR is from a fork
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Thanks for the review (to deploy soon)!'
+            })

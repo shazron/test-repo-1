@@ -40,9 +40,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo "approved (prod)"
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@master
+      - name: 'Comment PR'
+        uses: actions/github-script@3.0.0
         with:
-          message: 'approved (prod)'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          script: |
+            const { owner, name:repo } = github.event.repository;
+            const { number:issue_number } = github.event.pull_request
+            github.issues.createComment({ issue_number, owner.login, repo, body: 'Hello world ! 👋' });

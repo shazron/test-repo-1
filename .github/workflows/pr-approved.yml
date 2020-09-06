@@ -91,9 +91,6 @@ jobs:
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # this may fail when a PR is from a fork (security issues)
-          # the user needs to be a Contributor to the repo, and 
-          # create a PR from a branch in the same repo
           script: |
             github.issues.createComment({
               issue_number: context.issue.number,
@@ -110,9 +107,6 @@ jobs:
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # this may fail when a PR is from a fork (security issues)
-          # the user needs to be a Contributor to the repo, and 
-          # create a PR from a branch in the same repo
           script: |
             github.issues.createComment({
               issue_number: context.issue.number,

@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: check fork
         # The GH token used when a PR is a fork is read-only, for security reasons
-        # (so the fork PR can't steal secrets, for example)
+        # (so the forked PR can't steal secrets, for example)
         # This prevents us from adding comments, etc. So the requirements are:
         #     1. the PR must be from a branch in the same repo
         #     2. consequently, the PR creator must be a Contributor to the repo

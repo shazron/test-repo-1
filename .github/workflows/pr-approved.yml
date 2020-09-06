@@ -16,7 +16,7 @@ jobs:
       - name: check fork
         if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
-          echo "::error::Forks are not supported"
+          echo "::error::PRs from forks are not supported (Github security issue).\nPRs should be from a branch in the same repo, created by a user with Contributor privileges."
           exit 1
 
   echo-state:

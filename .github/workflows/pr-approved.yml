@@ -14,9 +14,15 @@ jobs:
       deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
     steps:
       - name: check fork
+        # The GH token used when a PR is a fork is read-only, for security reasons
+        # (so the fork PR can't steal secrets, for example)
+        # This prevents us from adding comments, etc. So the requirements are:
+        #     1. the PR must be from a branch in the same repo
+        #     2. consequently, the PR creator must be a Contributor to the repo
+        # This ensures trust, and the GH token will thus be read-write.
         if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
-          echo "::error::PRs from forks are not supported (Github security issue).%0APRs should be from a branch in the same repo, by a Contributor."
+          echo "::error::PRs from forks are not supported (Github security issue).%0APRs should be from a branch in the same repo, created by a Contributor."
           exit 1
 
   echo-state:
@@ -38,9 +44,6 @@ jobs:
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # this may fail when a PR is from a fork (security issues)
-          # the user needs to be a Contributor to the repo, and 
-          # create a PR from a branch in the same repo
           script: |
             github.issues.createComment({
               issue_number: context.issue.number,
@@ -58,9 +61,6 @@ jobs:
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # this may fail when a PR is from a fork (security issues)
-          # the user needs to be a Contributor to the repo, and 
-          # create a PR from a branch in the same repo
           script: |
             github.issues.createComment({
               issue_number: context.issue.number,

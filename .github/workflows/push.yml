@@ -20,8 +20,6 @@ jobs:
       #     echo "REPO_BRANCH ${REPO_BRANCH}"
       - name: Install and Build
         run: |
-          # npm install
-          # npm run build
           echo $REPO_OWNER
           echo $REPO_BRANCH
         env:

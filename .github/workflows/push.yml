@@ -20,8 +20,10 @@ jobs:
       #     echo "REPO_BRANCH ${REPO_BRANCH}"
       - name: Install and Build
         run: |
-          npm install
-          npm run build
+          # npm install
+          # npm run build
+          echo $REPO_OWNER
+          echo $REPO_BRANCH
         env:
           PREFIX_PATHS: true # equivalent to --prefix-paths flag for 'gatsby build'
           PATH_PREFIX: ${{ github.event.repository.name }}
